@@ -32,11 +32,27 @@ public class CourseController : Controller
 
     public async Task<IActionResult> AddTestCourse(int? id)
     {
-        Course course = new Course {Title = "Programming"};
+        Course course = new Course { Title = "Programming" };
         course.Id = Guid.NewGuid();
         course.CourseId = "D101";
         _context.Courses.Add(course);
         var saveResult = await _context.SaveChangesAsync();
         return Ok(saveResult);
+    }
+
+    public async Task<IActionResult> AddCourse(Course newCourse)
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("Index");
+        }
+        newCourse.Id = Guid.NewGuid();
+        _context.Courses.Add(newCourse);
+        var successful = await _context.SaveChangesAsync();
+        if (successful != 1)
+        {
+            return BadRequest("Could not add item.");
+        }
+        return RedirectToAction("Index");
     }
 }
