@@ -9,7 +9,8 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <!--td>&#x2714;</td-->
+                <td></td>
+                <td></td>
                 <td>Id</td>
                 <td>Title</td>
             </tr>
@@ -17,12 +18,14 @@
         @foreach (var course in Model.Courses)
         {
             <tr>
+                <td><a href="@Url.Action("Delete", "Course", new { id = course.Id })" onclick="return confirm('Are you sure you want to delete this item?')">&#10060;</a></td>
+                <td><a href="@Url.Action("Edit", "Course", new { id = course.Id })">&#9999;;</a></td>
                 <td>@course.CourseId</td>
                 <td>@course.Title</td>
             </tr>
         }
     </table>
     <div class="panel-footer add-item-form">
-        @await Html.PartialAsync("AddCoursePartial", new Course())
+        @await Html.PartialAsync("CoursePartial", Model.Current)
     </div>
 </div>

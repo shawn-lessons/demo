@@ -25,34 +25,66 @@ public class CourseController : Controller
 
         var model = new CourseViewModel()
         {
-            Courses = courses
+            Courses = courses,
+            Current = new Course()
         };
         return View(model);
     }
 
-    public async Task<IActionResult> AddTestCourse(int? id)
-    {
-        Course course = new Course { Title = "Programming" };
-        course.Id = Guid.NewGuid();
-        course.CourseId = "D101";
-        _context.Courses.Add(course);
-        var saveResult = await _context.SaveChangesAsync();
-        return Ok(saveResult);
-    }
-
-    public async Task<IActionResult> AddCourse(Course newCourse)
+    public async Task<IActionResult> Save(Course course)
     {
         if (!ModelState.IsValid)
         {
             return RedirectToAction("Index");
         }
-        newCourse.Id = Guid.NewGuid();
-        _context.Courses.Add(newCourse);
+        if (course.Id == Guid.Empty)
+        {
+            course.Id = Guid.NewGuid();
+            _context.Courses.Add(course);
+
+        }
+        else
+        {
+            _context.Courses.Update(course);
+        }
         var successful = await _context.SaveChangesAsync();
         if (successful != 1)
         {
             return BadRequest("Could not add item.");
         }
         return RedirectToAction("Index");
+    }
+
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var course = _context.Courses.Find(id);
+        if (course == null)
+        {
+            return NotFound(); // Optionally handle the case where the item is not found
+        }
+        _context.Courses.Remove(course);
+        _context.SaveChanges();
+        return RedirectToAction("Index");
+    }
+
+    public async Task<IActionResult> Edit(Guid id)
+    {
+        var course = _context.Courses.Find(id);
+        if (course == null)
+        {
+            return NotFound(); // Optionally handle the case where the item is not found
+        }
+
+        var courses = await _context.Courses
+            .ToArrayAsync();
+
+        var model = new CourseViewModel()
+        {
+            Courses = courses,
+            Current = course
+        };
+        return View("Index", model);
+
+
     }
 }
