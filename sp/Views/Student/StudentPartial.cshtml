@@ -1,0 +1,11 @@
+@model Student
+<form asp-action="Save" method="POST">
+    <input asp-for="Id" type="hidden" /> 
+    <label asp-for="Name">Title</label>
+    <input asp-for="Name"><br/>
+    <label asp-for="Email">Email</label>
+    <input asp-for="Email"><br/>
+    <label asp-for="StudentId">Id</label>
+    <input asp-for="StudentId"><br/>
+    <button type="submit">Save</button>
+</form>

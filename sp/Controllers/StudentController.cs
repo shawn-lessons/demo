@@ -8,44 +8,44 @@ using sp.Models;
 
 namespace sp.Controllers;
 
-public class CourseController : Controller
+public class StudentController : Controller
 {
     private readonly ApplicationDbContext _context;
 
 
-    public CourseController(ApplicationDbContext context)
+    public StudentController(ApplicationDbContext context)
     {
         _context = context;
     }
 
     public async Task<IActionResult> Index()
     {
-        var courses = await _context.Courses
+        var students = await _context.Students
             .ToArrayAsync();
 
-        var model = new CourseViewModel()
+        var model = new StudentViewModel()
         {
-            Courses = courses,
-            Current = new Course()
+            Students = students,
+            Current = new Student()
         };
         return View(model);
     }
 
-    public async Task<IActionResult> Save(Course course)
+    public async Task<IActionResult> Save(Student student)
     {
         if (!ModelState.IsValid)
         {
             return RedirectToAction("Index");
         }
-        if (course.Id == Guid.Empty)
+        if (student.Id == Guid.Empty)
         {
-            course.Id = Guid.NewGuid();
-            _context.Courses.Add(course);
+            student.Id = Guid.NewGuid();
+            _context.Students.Add(student);
 
         }
         else
         {
-            _context.Courses.Update(course);
+            _context.Students.Update(student);
         }
         var successful = await _context.SaveChangesAsync();
         if (successful != 1)
@@ -57,31 +57,31 @@ public class CourseController : Controller
 
     public async Task<IActionResult> Delete(Guid id)
     {
-        var course = _context.Courses.Find(id);
-        if (course == null)
+        var student = _context.Students.Find(id);
+        if (student == null)
         {
             return NotFound(); // Optionally handle the case where the item is not found
         }
-        _context.Courses.Remove(course);
+        _context.Students.Remove(student);
         _context.SaveChanges();
         return RedirectToAction("Index");
     }
 
     public async Task<IActionResult> Edit(Guid id)
     {
-        var course = _context.Courses.Find(id);
-        if (course == null)
+        var student = _context.Students.Find(id);
+        if (student == null)
         {
             return NotFound(); // Optionally handle the case where the item is not found
         }
 
-        var courses = await _context.Courses
+        var students = await _context.Students
             .ToArrayAsync();
 
-        var model = new CourseViewModel()
+        var model = new StudentViewModel()
         {
-            Courses = courses,
-            Current = course
+            Students = students,
+            Current = student
         };
         return View("Index", model);
 

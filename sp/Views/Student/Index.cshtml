@@ -1,0 +1,34 @@
+@model StudentViewModel
+
+@{
+    ViewData["Title"] = "Student Page";
+}
+
+<div class="panel panel-default course-panel">
+    <div class="panel-heading">@ViewData["Title"]</div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Id</td>
+                <td>Name</td>
+                <td>Email</td>
+
+            </tr>
+        </thead>
+        @foreach (var student in Model.Students)
+        {
+            <tr>
+                <td><a href="@Url.Action("Delete", "Student", new { id = student.Id })" onclick="return confirm('Are you sure you want to delete this item?')">&#10060;</a></td>
+                <td><a href="@Url.Action("Edit", "Student", new { id = student.Id })">&#9999;;</a></td>
+                <td>@student.StudentId</td>
+                <td>@student.Name</td>
+                <td>@student.Email</td>                
+            </tr>
+        }
+    </table>
+    <div class="panel-footer add-item-form">
+        @await Html.PartialAsync("StudentPartial", Model.Current)
+    </div>
+</div>
